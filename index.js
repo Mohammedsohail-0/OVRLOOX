@@ -30,22 +30,22 @@ const imageSets = {
 };
 
 const Clothes = {
-  Top1: "/assets/Top1.png",
-  Top2: "/assets/Top2.png",
-  Top3: "/assets/Top3.png",
-  Top4: "/assets/Top4.png",
-  Top5: "/assets/Top5.png",
-  Top6: "/assets/Top6.png",
-  Top7: "/assets/Top7.png",
-  Top8: "/assets/Top8.png",
-  Top9: "/assets/Top9.png",
-  Top10: "/assets/Top10.png",
-  Bottom1: "/assets/Bottom1.png",
-  Bottom2: "/assets/Bottom2.png",
-  Bottom3: "/assets/Bottom3.png",
-  Bottom4: "/assets/Bottom4.png",
-  Bottom5: "/assets/Bottom5.png",
-  Bottom6: "/assets/Bottom6.png",
+  Top1: "OVRLOOX/assets/Top1.png",
+  Top2: "OVRLOOX/assets/Top2.png",
+  Top3: "OVRLOOX/assets/Top3.png",
+  Top4: "OVRLOOX/assets/Top4.png",
+  Top5: "OVRLOOX/assets/Top5.png",
+  Top6: "OVRLOOX/assets/Top6.png",
+  Top7: "OVRLOOX/assets/Top7.png",
+  Top8: "OVRLOOX/assets/Top8.png",
+  Top9: "OVRLOOX/assets/Top9.png",
+  Top10: "OVRLOOX/assets/Top10.png",
+  Bottom1: "OVRLOOX/assets/Bottom1.png",
+  Bottom2: "OVRLOOX/assets/Bottom2.png",
+  Bottom3: "OVRLOOX/assets/Bottom3.png",
+  Bottom4: "OVRLOOX/assets/Bottom4.png",
+  Bottom5: "OVRLOOX/assets/Bottom5.png",
+  Bottom6: "OVRLOOX/assets/Bottom6.png",
 };
 
 const perfectPairs = [
