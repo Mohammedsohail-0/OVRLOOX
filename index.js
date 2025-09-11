@@ -30,22 +30,22 @@ const imageSets = {
 };
 
 const Clothes = {
-  Top1: "Top1.png",
-  Top2: "Top2.png",
-  Top3: "Top3.png",
-  Top4: "Top4.png",
-  Top5: "Top5.png",
-  Top6: "Top6.png",
-  Top7: "Top7.png",
-  Top8: "Top8.png",
-  Top9: "Top9.png",
-  Top10: "Top10.png",
-  Bottom1: "Bottom1.png",
-  Bottom2: "Bottom2.png",
-  Bottom3: "Bottom3.png",
-  Bottom4: "Bottom4.png",
-  Bottom5: "Bottom5.png",
-  Bottom6: "Bottom6.png",
+  Top1: "/assets/Top1.png",
+  Top2: "/assets/Top2.png",
+  Top3: "/assets/Top3.png",
+  Top4: "/assets/Top4.png",
+  Top5: "/assets/Top5.png",
+  Top6: "/assets/Top6.png",
+  Top7: "/assets/Top7.png",
+  Top8: "/assets/Top8.png",
+  Top9: "/assets/Top9.png",
+  Top10: "/assets/Top10.png",
+  Bottom1: "/assets/Bottom1.png",
+  Bottom2: "/assets/Bottom2.png",
+  Bottom3: "/assets/Bottom3.png",
+  Bottom4: "/assets/Bottom4.png",
+  Bottom5: "/assets/Bottom5.png",
+  Bottom6: "/assets/Bottom6.png",
 };
 
 const perfectPairs = [
