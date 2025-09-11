@@ -30,7 +30,7 @@ const imageSets = {
 };
 
 const Clothes = {
-  Top1: "assets/Top1.png",
+  Top1: "/assets/Top1.png",
   Top2: "assets/Top2.png",
   Top3: "assets/Top3.png",
   Top4: "assets/Top4.png",
@@ -40,7 +40,7 @@ const Clothes = {
   Top8: "assets/Top8.png",
   Top9: "assets/Top9.png",
   Top10: "assets/Top10.png",
-  Bottom1: "assets/Bottom1.png",
+  Bottom1: "/assets/Bottom1.png",
   Bottom2: "assets/Bottom2.png",
   Bottom3: "assets/Bottom3.png",
   Bottom4: "assets/Bottom4.png",
