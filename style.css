@@ -12,7 +12,7 @@ body {
     background-color: #f5e8d6;
     color: #000000;
     line-height: 1.6;
-    opacity: 0.95;
+    /* Removed opacity for better text contrast */
 }
 
 header, section, footer {
@@ -32,9 +32,8 @@ header:hover, section:hover, footer:hover {
 
 h2, h3, h4 {
     color: #8B4513;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+    font-weight: 600; /* Slightly bolder for emphasis */
+    letter-spacing: 1px; /* Reduced for less overwhelming feel */
     margin-bottom: 1rem;
 }
 
@@ -53,7 +52,9 @@ h4 {
 .highlight {
     color: #8B4513;
     font-weight: bold;
-    text-decoration: underline;
+    background-color: rgba(245, 232, 214, 0.3); /* Soft background for emphasis instead of underline */
+    padding: 0 0.2rem;
+    border-radius: 3px;
 }
 
 .choices {
@@ -107,7 +108,6 @@ h4 {
     transform: translateY(-2px);
 }
 
-
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(clamp(160px, 20vw, 200px), 1fr));
@@ -117,7 +117,7 @@ h4 {
 
 .grid-container img {
     height: 250px;
-    object-fit:scale-down;
+    object-fit: scale-down;
     cursor: pointer;
     border-radius: 10px;
     transition: all 0.3s ease;
@@ -170,6 +170,7 @@ h4 {
 .question .options label {
     font-size: clamp(0.9rem, 2.5vw, 1rem);
     color: #333;
+    font-weight: 500; /* Bolder labels to encourage reading */
 }
 
 .question .options input[type="checkbox"] {
@@ -235,6 +236,7 @@ select:focus {
     font-size: clamp(1rem, 2.8vw, 1.3rem);
     color: #8B4513;
     font-family: 'Yeseva One', cursive;
+    font-weight: bold; /* Bolder title for attention */
 }
 
 .activity {
@@ -245,7 +247,7 @@ select:focus {
 }
 
 .game-container {
-    position:relative;
+    position: relative;
     width: 100%;
     max-width: 800px;
     height: auto;
@@ -304,7 +306,7 @@ select:focus {
 
 .bottom-wear-carousel {
     margin-top: 15px;
-     margin-left: 100px;
+    margin-left: 100px;
 }
 
 .top-wear-carousel::-webkit-scrollbar,
@@ -426,11 +428,13 @@ select:focus {
 @media (max-width: 768px) {
     body {
         padding: 0.8rem;
+        font-size: 1.1rem; /* Slightly larger base font for readability */
+        line-height: 1.8; /* More spacing between lines */
     }
 
     header, section, footer {
-        margin: 0.5rem;
-        padding: 0.8rem;
+        margin: 0.5rem auto;
+        padding: 1.2rem; /* More padding for text breathing room */
     }
 
     .choices {
@@ -457,6 +461,7 @@ select:focus {
 
     .top-wear-carousel, .bottom-wear-carousel {
         height: clamp(120px, 35vw, 160px);
+        margin-left: 0;
     }
 
     .top-wear-carousel img,
@@ -484,6 +489,8 @@ select:focus {
     #buddy-rating {
         font-size: clamp(1.2rem, 3.5vw, 1.5rem);
         padding: 8px;
+        margin-left: 0;
+        text-align: center; /* Center for better flow */
     }
 
     button, .categoryInterestSelection {
@@ -495,10 +502,25 @@ select:focus {
     input[type="number"],
     select {
         max-width: 90%;
+        font-size: 1.1rem; /* Larger input text */
+    }
+
+    .question .options {
+        gap: 1rem; /* More space between options */
+        padding: 1.5rem; /* Extra padding for text focus */
+    }
+
+    .question .options label {
+        font-weight: 600; /* Bolder on mobile */
     }
 }
 
 @media (max-width: 480px) {
+    body {
+        font-size: 1.05rem; /* Even larger for tiny screens */
+        line-height: 1.9;
+    }
+
     .choices img {
         max-width: 100px;
     }
@@ -519,6 +541,7 @@ select:focus {
 
     .top-wear-carousel, .bottom-wear-carousel {
         height: clamp(100px, 30vw, 130px);
+        margin-left: 0;
     }
 
     .top-wear-carousel img,
@@ -549,5 +572,9 @@ select:focus {
 
     .title p {
         font-size: clamp(0.9rem, 2.5vw, 1rem);
+    }
+
+    #buddy-rating {
+        margin-left: 0;
     }
 }
