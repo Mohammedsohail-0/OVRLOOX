@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OVRLOOX Discount</title>
+    
+<link rel="stylesheet" href="./style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Yeseva+One&family=Bebas+Neue&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Coupon Section -->
+    <section id="couponContainer">
+        <div class="coupon-container">
+            <div class="discount-display" id="discount">0%</div>
+            <div class="coupon-box" id="couponBox" style="display: none;">
+                <span id="couponCode">XXXX-XXX</span>
+                <button class="copy" id="copyBtn" aria-label="Copy coupon code">Copy</button>
+            </div>
+            <button class="generate" id="generateCouponBtn" aria-label="Generate coupon">Generate Coupon</button>
+        </div>
+        <p>This coupon code can be used only once @ovrloox.store during FIRST DROP</p>
+    </section>
+
+    <!-- Sharing Section -->
+    <section id="referralSection">
+        <div class="referralContainer">
+            <p id="refTxt">Share with someone who has fashion sense LIKE YOU,<br> to <b class="bold">Increase</b> your discount up to <b class="bold">25%</b></p>
+            <div class="refBox" id="refBox">
+                <span id="refLink">qwertyuiop[</span>
+            </div>
+            <button class="share" id="shareBtn" aria-label="Share referral link">Share</button>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script type="module" src="./discount.js"></script>
+</body>
+</html>

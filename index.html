@@ -91,6 +91,7 @@
     <!-- Style Questions -->
     <section id="streetwearQuestion" class="question" style="display: none;">
         <h2>Which <span class="highlight">pieces</span> would you wear first from OVRLOOX?</h2>
+        <p>(You can select Multiple options)</p>
         <div class="options">
             <label><input type="checkbox" name="streetwearOpt" value="oversized"> Oversized T-shirts</label><br>
             <label><input type="checkbox" name="streetwearOpt" value="cargo"> Cargo Pants</label><br>
@@ -102,6 +103,7 @@
     </section>
     <section id="casualsQuestion" class="question" style="display: none;">
         <h2>What's a <span class="highlight">must-have</span> in your wardrobe right now?</h2>
+        <p>(You can select Multiple options)</p>
         <div class="options">
             <label><input type="checkbox" name="casualsOpt" value="basict"> Basic T-shirts</label><br>
             <label><input type="checkbox" name="casualsOpt" value="hoodie"> Hoodies</label><br>
@@ -112,6 +114,7 @@
     </section>
     <section id="oldmoneyQuestion" class="question" style="display: none;">
         <h2>Which of these <span class="highlight">classics</span> would you rock?</h2>
+        <p>(You can select Multiple options)</p>
         <div class="options">
             <label><input type="checkbox" name="oldmoneyOpt" value="polo"> Polo Shirts</label><br>
             <label><input type="checkbox" name="oldmoneyOpt" value="oxford"> Oxford Button-Down shirts</label><br>
@@ -124,6 +127,7 @@
     <!-- Style Grids -->
     <section class="streetWearGrid" id="streetWearGrid" style="display: none;">
         <h2 class="subheadings">Pick Your <span class="highlight">Favorites</span></h2>
+        <p>(You can select Multiple options)</p>
         <div class="grid-container">
             <img src="/assets/streetwear1.jpg" alt="Streetwear Option 1" data-value="streetwear1">
             <img src="/assets/streetwear8.jpg" alt="Streetwear Option 8" data-value="streetwear8">
@@ -138,6 +142,7 @@
     </section>
     <section class="casualsGrid" id="casualsGrid" style="display: none;">
         <h2 class="subheadings">Pick Your <span class="highlight">Favorites</span></h2>
+        <p>(You can select Multiple options)</p>
         <div class="grid-container">
             <img src="/assets/casuals1.jpg" alt="Casuals Option 1" data-value="casuals1">
             <img src="/assets/casuals4.jpg" alt="Casuals Option 4" data-value="casuals4">
@@ -149,6 +154,7 @@
     </section>
     <section class="oldMoneyGrid" id="oldMoneyGrid" style="display: none;">
         <h2 class="subheadings">Pick Your <span class="highlight">Favorites</span></h2>
+        <p>(You can select Multiple options)</p>
         <div class="grid-container">
             <img src="/assets/oldmoney1.jpg" alt="Old Money Option 1" data-value="oldmoney1">
             <img src="/assets/oldmoney2.jpg" alt="Old Money Option 2" data-value="oldmoney2">
@@ -203,36 +209,16 @@
                 <input type="text" id="userName" placeholder="Enter your name">
             </div>
             <div>
-                <label for="userAge">Age:</label>
-                <input type="number" id="userAge" placeholder="Enter your age">
+                <label for="userEmail">Email:</label>
+                <input type="text" id="userEmail" placeholder="Email">
+                <div><p>*You will recieve COUPONS via mail*</p></div>
             </div>
             <div>
-                <label for="userContact">Contact:</label>
-                <input type="text" id="userContact" placeholder="Email / Mobile number">
-            </div>
-            <div>
-                <label for="userDOB">DOB:</label>
-                <input type="date" id="userDOB">
+                <lable for="userContact">Ph.no:</lable>
+                <input type="number" id="userContact" placeholder="Ph.no number">
             </div>
             <button class="manualForm" id="manualFormSubmitBtn">Submit</button>
         </section>
     </section>
-
-    <!-- Coupon Section -->
-    <section id="couponContainer" style="display: none;">
-        <div class="coupon-container">
-            <div class="discount-display" id="discount">0%</div>
-            <div class="coupon-box" id="couponBox" style="display: none;">
-                <span id="couponCode">XXXX-XXXX</span>
-                <button class="copy" id="copyBtn">Copy</button>
-            </div>
-            <button class="generate" id="generateCouponBtn">Generate Coupon</button>
-        </div>
-        <p>This is coupon code can be used only once 
-            @ovrloox.store during FIRST DROP
-        </p>
-    </section>
-
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
     <script type="module" src="./index.js"></script>
 </body>

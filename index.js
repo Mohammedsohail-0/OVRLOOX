@@ -1,6 +1,8 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getDatabase, ref, push, get, update } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+export { elements, state, storeUserData,signedInUser };
 
 // Firebase configuration
 const firebaseConfig = {
@@ -80,8 +82,6 @@ const elements = {
     brandIntroBtn: document.getElementById("brandIntroBtn"),
     googleLoginBtn: document.getElementById("googleLoginBtn"),
     manualFormSubmitBtn: document.getElementById("manualFormSubmitBtn"),
-    copyBtn: document.getElementById("copyBtn"),
-    generateCouponBtn: document.getElementById("generateCouponBtn")
   },
   sections: {
     activitySection: document.getElementById("activitySection"),
@@ -105,9 +105,8 @@ const elements = {
     priceDisplay: document.getElementById("priceValue"),
     timePeriodSelection: document.getElementById("timePeriodSelection"),
     userName: document.getElementById("userName"),
-    userAge: document.getElementById("userAge"),
     userContact: document.getElementById("userContact"),
-    userDOB: document.getElementById("userDOB")
+    userEmail: document.getElementById("userEmail")
   },
   displays: {
     upperBody: document.getElementById("upperBody"),
@@ -138,7 +137,9 @@ let state = {
   },
   rating: null,
   couponCode: null,
-  discount: null
+  discount: null,
+  referralCode: null,
+  referredUsers: []
 };
 
 // Utility functions
@@ -152,9 +153,9 @@ function showSection(section) {
   if (section) {
     hideAllSections();
     section.style.display = section === elements.sections.colourPreferenceSec ||
-                          section === elements.sections.streetWearSec ||
-                          section === elements.sections.oldMoneySec ||
-                          section === elements.sections.casualsSec ? 'grid' : 'block';
+      section === elements.sections.streetWearSec ||
+      section === elements.sections.oldMoneySec ||
+      section === elements.sections.casualsSec ? 'grid' : 'block';
     section.scrollIntoView({ behavior: 'smooth', block: 'start' });
   } else {
     console.error('Section not found:', section);
@@ -225,7 +226,7 @@ function showComplement(rating) {
     elements.sections.complementSection.style.display = "none";
   }
 }
-
+// Add user to Firebase
 function storeUserData(isGoogle = false) {
   let userData = {
     category: state.category,
@@ -239,6 +240,8 @@ function storeUserData(isGoogle = false) {
     rating: state.rating,
     couponCode: state.couponCode,
     discount: state.discount,
+    referralCode: state.referralCode,
+    referredUsers: state.referredUsers,
     timestamp: Date.now()
   };
 
@@ -247,126 +250,132 @@ function storeUserData(isGoogle = false) {
     userData.name = signedInUser.displayName;
     userData.email = signedInUser.email;
   } else {
-    userData.name = elements.inputs.userName.value;
-    userData.age = elements.inputs.userAge.value;
-    userData.contact = elements.inputs.userContact.value;
-    userData.dob = elements.inputs.userDOB.value;
-  }
-
-  push(ref(db, 'users'), userData)
-    .then(() => {
-      console.log('Coupon code and discount stored successfully:', {
-        couponCode: state.couponCode,
-        discount: state.discount
-      });
-    })
-    .catch(err => {
-      console.error('Error storing coupon data:', err);
-    });
-}
-
-let finalDiscount = 0;
-let couponCode = "";
-
-function generateCoupon() {
-  const discountElement = elements.displays.discount;
-  const codeElement = elements.displays.couponCode;
-  const couponBox = document.getElementById("couponBox");
-  elements.buttons.generateCouponBtn.disabled = true;
-
-  // Generate final discount (5–15%)
-  finalDiscount = Math.floor(Math.random() * (15 - 5 + 1)) + 5;
-  state.discount = finalDiscount;
-  couponCode = "CPN-" + Math.random().toString(36).substr(2, 6).toUpperCase();
-  state.couponCode = couponCode;
-  console.log(state.couponCode, state.discount);
-  let flag = sessionStorage.getItem("isLoggedIn");
-  if(flag){
-    storeUserData(true);
-  }else{
-    storeUserData(false);
-  }
-  let interval;
-
-  // Phase 1: fast spin (random numbers 0-99)
-  let phase1 = setInterval(() => {
-    discountElement.textContent = Math.floor(Math.random() * 100) + "%";
-  }, 50);
-
-  // After 1.5s move to phase 2
-  setTimeout(() => {
-    clearInterval(phase1);
-    let phase2 = setInterval(() => {
-      discountElement.textContent = (Math.floor(Math.random() * 26) + 25) + "%";
-    }, 100);
-
-    // After 1.5s move to final phase
-    setTimeout(() => {
-      clearInterval(phase2);
-      let step = 0;
-      interval = setInterval(() => {
-        step++;
-        let ease = Math.min(1, step / 20); // slow easing
-        let value = Math.floor((25 + Math.random() * 25) * (1 - ease) + finalDiscount * ease);
-        discountElement.textContent = value + "%";
-
-        if (step >= 20) {
-          clearInterval(interval);
-          discountElement.textContent = finalDiscount + "%";
-          codeElement.textContent = couponCode;
-          couponBox.style.display = "flex";
-          confetti({
-            particleCount: 100,
-            spread: 70,
-            origin: { y: 0.4 }
-          });
+    // Check if DOM inputs are available (they aren't on discount.html)
+    if (!elements.inputs.userName || !elements.inputs.userContact || !elements.inputs.userEmail) {
+      // Fall back to sessionStorage (populated during sign-in)
+      const storedState = sessionStorage.getItem("userState");
+      if (storedState) {
+        try {
+          const parsedState = JSON.parse(storedState);
+          userData.name = parsedState.name || "Anonymous";
+          userData.email = parsedState.email || "";
+          userData.contact = parsedState.contact || "";
+        } catch (error) {
+          console.error("Failed to parse userState from sessionStorage:", error);
+          userData.name = "Anonymous";
+          userData.email = "";
+          userData.contact = "";
         }
-      }, 150);
-    }, 1500);
-  }, 1500);
-}
+      } else {
+        console.warn("No user data in sessionStorage; using defaults");
+        userData.name = "Anonymous";
+        userData.email = "";
+        userData.contact = "";
+      }
+    } else {
+      // Use DOM inputs (only on index.html)
+      if (!elements.inputs.userName.value || !elements.inputs.userContact.value || !elements.inputs.userEmail.value) {
+        throw new Error("Required input fields are empty");
+      }
+      userData.name = elements.inputs.userName.value;
+      userData.contact = elements.inputs.userContact.value;
+      userData.email = elements.inputs.userEmail.value;
+    }
+  }
 
-function copyCoupon() {
-  navigator.clipboard.writeText(couponCode)
-    .then(() => {
-      elements.buttons.copyBtn.textContent = "Copied!";
-      setTimeout(() => {
-        elements.buttons.copyBtn.textContent = "Copy";
-      }, 2000);
+  // Store in Firebase (with error handling for async issues like invalid data)
+  return push(ref(db, 'users'), userData)
+    .then((snapshot) => {
+      console.log('User data stored successfully with ID:', snapshot.key);
+      // Update sessionStorage with full state for consistency
+      sessionStorage.setItem("userState", JSON.stringify({
+        ...state,
+        name: userData.name,
+        email: userData.email,
+        contact: userData.contact
+      }));
+      return snapshot.key;
     })
     .catch(err => {
-      console.error('Copy failed:', err);
+      console.error('Error storing user data in Firebase:', err);
+      // Still update sessionStorage for UI continuity
+      sessionStorage.setItem("userState", JSON.stringify({
+        ...state,
+        name: userData.name,
+        email: userData.email,
+        contact: userData.contact
+      }));
+      throw err; // Re-throw if needed, but don't block UI
     });
+}
+
+// Handle referral tracking
+function handleReferral() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const refCode = urlParams.get('ref');
+  if (refCode) {
+    sessionStorage.setItem('referralCode', refCode); // Store referral code for use on sign-in
+  }
 }
 
 // Event handlers
 function setupEventListeners() {
   // Google Sign-in
+  // Google Sign-in
+if (elements.buttons.googleLoginBtn) {
   elements.buttons.googleLoginBtn.addEventListener("click", () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         signedInUser = result.user;
         console.log("Signed in:", signedInUser.displayName);
-       //signed up with google
-        sessionStorage.setItem("withGoogle", "true");
-        //show coupon section
-        showSection(elements.sections.couponContainer);
+        // Store user data after sign-in
+        storeUserData(true).then(userId => {
+          // Check for referral code and update referrer
+          const refCode = sessionStorage.getItem('referralCode');
+          if (refCode) {
+            updateReferrer(refCode, userId, signedInUser.email);
+          }
+          // Set logged in flag and full state (including user details)
+          sessionStorage.setItem("isLoggedIn", "true");
+          sessionStorage.setItem("userState", JSON.stringify({
+            ...state,
+            name: signedInUser.displayName,
+            email: signedInUser.email,
+            contact: ""  // Google doesn't provide phone; leave empty
+          }));
+          window.location.href = "/discount.html";
+        });
       })
       .catch((error) => console.error(error));
   });
+}
 
-  // Manual Submit
+// Manual Submit
+if (elements.buttons.manualFormSubmitBtn) {
   elements.buttons.manualFormSubmitBtn.addEventListener('click', () => {
-    if (!elements.inputs.userName.value || !elements.inputs.userContact.value) {
-      alert('Please fill in name and contact.');
+    if (!elements.inputs.userName.value || !elements.inputs.userContact.value || !elements.inputs.userEmail.value) {
+      alert('Please fill in name, contact, and email.');
       return;
     }
-    //signed up manually
-    sessionStorage.setItem("withGoogle", "false");
-     //show coupon section
-    showSection(elements.sections.couponContainer);
+    // Store user data after manual submit
+    storeUserData(false).then(userId => {
+      // Check for referral code and update referrer
+      const refCode = sessionStorage.getItem('referralCode');
+      if (refCode) {
+        updateReferrer(refCode, userId, elements.inputs.userEmail.value);
+      }
+      // Set logged in flag and full state (including user details)
+      sessionStorage.setItem("isLoggedIn", "false");
+      sessionStorage.setItem("userState", JSON.stringify({
+        ...state,
+        name: elements.inputs.userName.value,
+        email: elements.inputs.userEmail.value,
+        contact: elements.inputs.userContact.value
+      }));
+      window.location.href = "/discount.html";
+    });
   });
-
+}
   // Category buttons
   elements.buttons.casualsBtn?.addEventListener('click', () => {
     state.category = 'casuals';
@@ -528,21 +537,59 @@ function setupEventListeners() {
     console.log("Let's shape the drop button clicked");
     showSection(elements.sections.categorySection);
   });
+}
 
-  // Coupon buttons
-  elements.buttons.generateCouponBtn?.addEventListener('click', () => {
-    console.log("Generating coupon");
-    generateCoupon();
+// Update referrer's data in Firebase
+function updateReferrer(refCode, referredUserId, referredUserEmail) {
+  get(ref(db, 'users')).then((snapshot) => {
+    if (snapshot.exists()) {
+      const users = snapshot.val();
+      let referrerId = null;
+      for (const userId in users) {
+        if (users[userId].referralCode === refCode) {
+          referrerId = userId;
+          break;
+        }
+      }
+      if (referrerId) {
+        const referrerRef = ref(db, `users/${referrerId}`);
+        update(referrerRef, {
+          referredUsers: [...(users[referrerId].referredUsers || []), referredUserId],
+          referralFlag: true
+        }).then(() => {
+          console.log(`Updated referrer ${referrerId} with referred user ${referredUserId}`);
+          // Send email to referrer
+          sendReferralEmail(users[referrerId].email, referredUserEmail);
+        }).catch(err => {
+          console.error('Error updating referrer:', err);
+        });
+      } else {
+        console.warn(`No user found with referral code ${refCode}`);
+      }
+    } else {
+      console.warn('No users found in database');
+    }
+  }).catch(err => {
+    console.error('Error fetching users:', err);
   });
+}
 
-  elements.buttons.copyBtn?.addEventListener('click', () => {
-    console.log("Copying code");
-    copyCoupon();
+// Send referral email using EmailJS
+function sendReferralEmail(referrerEmail, referredUserEmail) {
+  emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
+    to_email: referrerEmail,
+    referred_user: referredUserEmail,
+    message: `Great news! ${referredUserEmail} signed up using your referral link! Your discount may increase up to 25%.`
+  }).then(() => {
+    console.log('Referral email sent to', referrerEmail);
+  }).catch(err => {
+    console.error('Error sending referral email:', err);
   });
 }
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+  handleReferral(); // Check for referral code on page load
   showSection(elements.sections.activitySection);
   setupImageSelection(elements.sections.oldMoneySec, state.selections.oldMoney);
   setupImageSelection(elements.sections.casualsSec, state.selections.casuals);
