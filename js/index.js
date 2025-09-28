@@ -343,7 +343,7 @@ if (elements.buttons.googleLoginBtn) {
             email: signedInUser.email,
             contact: ""  // Google doesn't provide phone; leave empty
           }));
-          window.location.href = "/discount.html";
+          window.location.href = "discount.html";
         });
       })
       .catch((error) => console.error(error));
@@ -372,7 +372,7 @@ if (elements.buttons.manualFormSubmitBtn) {
         email: elements.inputs.userEmail.value,
         contact: elements.inputs.userContact.value
       }));
-      window.location.href = "/discount.html";
+      window.location.href = "discount.html";
     });
   });
 }
